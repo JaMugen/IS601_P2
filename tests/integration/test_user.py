@@ -339,3 +339,21 @@ def test_error_handling():
             session.execute(text("INVALID SQL"))
     assert "INVALID SQL" in str(exc_info.value)
 
+
+def test_verify_token_value_error(db_session, test_user):
+    """
+    Test that verifying a token with a non-UUID `sub` returns `None`.
+
+    This targets the branch where the token decodes successfully but
+    `uuid.UUID(sub)` raises ValueError/TypeError (lines ~229-230 in the model).
+    """
+    from jose import jwt
+    from app.core.config import settings
+
+    # Create a token that decodes successfully but has an invalid UUID in `sub`.
+    payload = {"sub": "not-a-uuid"}
+    token = jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm=settings.ALGORITHM)
+
+    # verify_token should return None when the `sub` value cannot be parsed as a UUID
+    result = User.verify_token(token)
+    assert result is None
