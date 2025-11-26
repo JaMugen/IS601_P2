@@ -1,6 +1,6 @@
 services:
   web:
-    image: pitou500/module_13_project
+    image: pitou500/module_14_project
     build: .
     ports:
       - "8000:8000"

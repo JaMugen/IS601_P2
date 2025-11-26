@@ -99,8 +99,8 @@ jobs:
         with:
           push: true
           tags: |
-            pitou500/module_13_project:latest
-            pitou500/module_13_project:${{ github.sha }}
+            pitou500/module_14_project:latest
+            pitou500/module_14_project:${{ github.sha }}
           platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=pitou500/module_13_project:cache
+          cache-from: type=registry,ref=pitou500/module_14_project:cache
           cache-to: type=inline,mode=max
