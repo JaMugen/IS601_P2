@@ -318,7 +318,3 @@ def test_model_division():
     with pytest.raises(ValueError):
         calc_zero = Calculation.create("division", dummy_user_id, [100, 0])
         calc_zero.get_result()
-
-# ---------------------------------------------------------------------------
-# JWT Token Tests
-# ---------------------------------------------------------------------------
