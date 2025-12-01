@@ -1,4 +1,19 @@
 # app/models/user.py
+"""
+User Model Module
+
+This module defines the User model for the application, handling:
+- User authentication
+- Password hashing
+- Token generation and validation
+- User registration
+
+The User model is designed to follow security best practices:
+- Secure password hashing
+- JWT-based authentication
+- Account status tracking
+- Timezone-aware timestamps
+"""
 
 import uuid
 from datetime import datetime, timezone, timedelta
@@ -12,35 +27,81 @@ from app.models.calculation import Calculation
 settings = get_settings()
 
 def utcnow():
-    """Helper function to get current UTC datetime"""
+    """
+    Helper function to get current UTC datetime with timezone information.
+    
+    Using timezone-aware datetimes prevents issues with timezone
+    differences and daylight saving time changes.
+    
+    Returns:
+        datetime: Current UTC time with timezone info
+    """
     return datetime.now(timezone.utc)
 
 class User(Base):
-    """User model with authentication and token management capabilities."""
+    """
+    User model with authentication and token management capabilities.
+    
+    This model represents a user in the system and provides methods for:
+    - User registration and validation
+    - Password hashing and verification
+    - JWT token generation
+    - Authentication
+    
+    It follows the Active Record pattern, where the model encapsulates
+    both data and behavior related to users.
+    """
     
     __tablename__ = "users"
     
     # Primary key and identifying fields
-    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, index=True)
-    username = Column(String(50), unique=True, nullable=False, index=True)
-    email = Column(String, unique=True, nullable=False, index=True)
-    password = Column(String, nullable=False)
+    id = Column(PG_UUID(as_uuid=True), 
+                primary_key=True, 
+                default=uuid.uuid4,  # Auto-generate UUIDs
+                unique=True, 
+                index=True)          # Index for faster lookups
+    
+    username = Column(String(50), 
+                      unique=True,    # Prevent duplicate usernames 
+                      nullable=False, 
+                      index=True)     # Index for faster lookups and login
+    
+    email = Column(String, 
+                   unique=True,       # Prevent duplicate emails
+                   nullable=False, 
+                   index=True)        # Index for faster lookups and login
+    
+    password = Column(String, 
+                      nullable=False) # Stored as hashed, not plaintext
     
     # Personal information
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     
-    # Status flags
-    is_active = Column(Boolean, default=True)
-    is_verified = Column(Boolean, default=False)
+    # Status flags for account management
+    is_active = Column(Boolean, 
+                       default=True)  # For disabling accounts without deletion
     
-    # Timestamps
-    created_at = Column(DateTime(timezone=True), default=utcnow, nullable=False)
-    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
-    last_login = Column(DateTime(timezone=True), nullable=True)
+    is_verified = Column(Boolean, 
+                         default=False) # For email verification status
     
-    # Relationships
-    calculations = relationship("Calculation", back_populates="user", cascade="all, delete-orphan")
+    # Timestamps - All timezone-aware
+    created_at = Column(DateTime(timezone=True), 
+                        default=utcnow, 
+                        nullable=False)
+    
+    updated_at = Column(DateTime(timezone=True), 
+                        default=utcnow, 
+                        onupdate=utcnow,  # Auto-update on record changes
+                        nullable=False)
+    
+    last_login = Column(DateTime(timezone=True), 
+                        nullable=True)  # Track login activity
+    
+    # Relationships - one-to-many with Calculation model
+    calculations = relationship("Calculation", 
+                               back_populates="user", 
+                               cascade="all, delete-orphan")  # Delete user's calculations when user is deleted
     
     def __init__(self, *args, **kwargs):
         """Initialize a new user, handling password hashing if provided."""
