@@ -150,3 +150,11 @@ def test_invalid_inputs_for_division():
     division = Division(user_id=dummy_user_id(), inputs=[10])
     with pytest.raises(ValueError, match="Inputs must be a list with at least two numbers."):
         division.get_result()
+
+def test_abstract_calculation_get_result():
+    """
+    Test that calling get_result on the abstract Calculation class raises NotImplementedError.
+    """
+    calculation = Calculation(user_id=dummy_user_id(), inputs=[1, 2, 3])
+    with pytest.raises(NotImplementedError, match=""):
+        calculation.get_result()
