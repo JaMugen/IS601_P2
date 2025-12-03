@@ -1,5 +1,5 @@
 """
-API-based End-to-End Tests for Calculations Application
+End-to-End Tests for Calculations Application
 
 This module contains comprehensive API tests for the calculations application,
 including user registration, login, and all calculation operations (addition,
