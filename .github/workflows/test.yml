@@ -45,7 +45,7 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          playwright install  # if you use Playwright for e2e tests
+          playwright install  
       
       - name: Run tests
         env:
