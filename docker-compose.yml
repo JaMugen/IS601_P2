@@ -1,6 +1,6 @@
 services:
   web:
-    image: pitou500/module_14_project
+    image: pitou500/is601_p2
     build: .
     ports:
       - "8000:8000"
