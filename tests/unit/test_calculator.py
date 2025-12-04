@@ -2,7 +2,7 @@
 
 import pytest  # Import the pytest framework for writing and running tests
 from typing import Union  # Import Union for type hinting multiple possible types
-from app.operations import add, subtract, multiply, divide  # Import the calculator functions from the operations module
+from app.operations import add, subtract, multiply, divide, exponent  # Import the calculator functions from the operations module
 
 # Define a type alias for numbers that can be either int or float
 Number = Union[int, float]
@@ -232,3 +232,45 @@ def test_divide_by_zero() -> None:
     # Assert that the exception message contains the expected error message
     assert "Cannot divide by zero!" in str(excinfo.value), \
         f"Expected error message 'Cannot divide by zero!', but got '{excinfo.value}'"
+
+@pytest.mark.parametrize(
+    "a, b, expected",
+    [
+        (2, 3, 8 ),           # Test raising a positive integer to a positive integer power
+        (4, 0.5, 2.0),        # Test raising a positive integer to a fractional power
+        (2.5, 2, 6.25),       # Test raising a positive float to a positive integer power
+        (-2, 3, -8),          # Test raising a negative integer to a positive integer power 
+    ],
+    ids=[
+        "exponent_positive_integer_power",
+        "exponent_fractional_power",
+        "exponent_positive_float_power",
+        "exponent_negative_integer_power",
+    ]
+)
+def test_exponent(a: Number, b: Number, expected: Number) -> None: 
+    """
+    Test the 'Exponent' function with various combinations of base and exponent.
+
+    This parameterized test verifies that the 'Exponent' function correctly raises the base
+    number to the power of the exponent, handling both positive and negative values, as well as
+    integers and floats. Parameterization enables efficient testing of multiple scenarios.
+
+    Parameters:
+    - a (Number): The base number.
+    - b (Number): The exponent.
+    - expected (Number): The expected result of the exponentiation.
+
+    Steps:
+    1. Call the 'Exponent' function with arguments 'a' and 'b'.
+    2. Assert that the result is equal to 'expected'.
+
+    Example:
+    >>> test_exponent(2, 3, 8)
+    >>> test_exponent(4, 0.5, 2.0)
+    """
+    # Call the 'Exponent' function with the provided arguments
+    result = exponent(a, b)
+    
+    # Assert that the result of Exponent(a, b) matches the expected value
+    assert result == expected, f"Expected Exponent({a}, {b}) to be {expected}, but got {result}"
