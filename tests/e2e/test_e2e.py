@@ -428,6 +428,36 @@ def test_exponent_with_zero_exponent(authenticated_user):
     data = response.json()
     assert data["result"] == 1.0 or data["result"] == 1
 # ======================================================================================
+# Modulus Tests
+# ======================================================================================
+@pytest.mark.e2e
+def test_modulus_two_numbers(authenticated_user):
+    """Test modulus of two numbers via API."""
+    response = create_calculation_api(
+        authenticated_user["base_url"],
+        authenticated_user["token"],
+        "modulus",
+        [10, 3]
+    )
+    
+    assert response.status_code == 201
+    data = response.json()
+    assert data["type"] == "modulus"
+    assert data["result"] == 1.0 or data["result"] == 1
+@pytest.mark.e2e
+def test_modulus_multiple_numbers(authenticated_user):
+    """Test modulus of multiple numbers via API."""
+    response = create_calculation_api(
+        authenticated_user["base_url"],
+        authenticated_user["token"],
+        "modulus",
+        [100, 30, 4]  # ((100 % 30) % 4) = 2
+    )
+    
+    assert response.status_code == 201
+    data = response.json()
+    assert data["result"] == 2.0 or data["result"] == 2
+# ======================================================================================
 # Multiple Operations Test
 # ======================================================================================
 @pytest.mark.e2e
