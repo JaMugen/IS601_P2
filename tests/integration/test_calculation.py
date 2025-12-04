@@ -60,6 +60,16 @@ def test_division_by_zero():
     with pytest.raises(ValueError, match="Cannot divide by zero."):
         division.get_result()
 
+def test_exponential_get_result():
+    """
+    Test that Exponential.get_result returns the correct power result.
+    """
+    from app.models.calculation import Exponential
+    inputs = [2, 3]  # 2^3 = 8
+    exponential = Exponential(user_id=dummy_user_id(), inputs=inputs)
+    result = exponential.get_result()
+    assert result == 8, f"Expected 8, got {result}"
+
 def test_calculation_factory_addition():
     """
     Test the Calculation.create factory method for addition.
@@ -116,6 +126,20 @@ def test_calculation_factory_division():
     assert isinstance(calc, Division), "Factory did not return a Division instance."
     assert calc.get_result() == 10, "Incorrect division result."
 
+def test_calculation_factory_exponential():
+    """
+    Test the Calculation.create factory method for exponentiation.
+    """
+    from app.models.calculation import Exponential
+    inputs = [2, 4]  # 2^4 = 16
+    calc = Calculation.create(
+        calculation_type='exponent',
+        user_id=dummy_user_id(),
+        inputs=inputs,
+    )
+    assert isinstance(calc, Exponential), "Factory did not return an Exponential instance."
+    assert calc.get_result() == 16, "Incorrect exponentiation result."
+
 def test_calculation_factory_invalid_type():
     """
     Test that Calculation.create raises a ValueError for an unsupported calculation type.
@@ -151,6 +175,15 @@ def test_invalid_inputs_for_division():
     with pytest.raises(ValueError, match="Inputs must be a list with at least two numbers."):
         division.get_result()
 
+def test_invalid_inputs_for_exponential():
+    """
+    Test that providing fewer than two numbers to Exponential.get_result raises a ValueError.
+    """
+    from app.models.calculation import Exponential
+    exponential = Exponential(user_id=dummy_user_id(), inputs=[2])
+    with pytest.raises(ValueError, match="Inputs must be a list with at least two numbers."):
+        exponential.get_result()
+
 def test_abstract_calculation_get_result():
     """
     Test that calling get_result on the abstract Calculation class raises NotImplementedError.
@@ -158,3 +191,4 @@ def test_abstract_calculation_get_result():
     calculation = Calculation(user_id=dummy_user_id(), inputs=[1, 2, 3])
     with pytest.raises(NotImplementedError, match=""):
         calculation.get_result()
+
