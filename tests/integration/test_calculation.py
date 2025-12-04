@@ -4,10 +4,12 @@ import uuid
 from app.models.calculation import (
     Calculation,
     Addition,
+    Modulus,
     Subtraction,
     Multiplication,
     Division,
 )
+from app.operations import modulus
 
 # Helper function to create a dummy user_id for testing.
 def dummy_user_id():
@@ -140,13 +142,28 @@ def test_calculation_factory_exponential():
     assert isinstance(calc, Exponential), "Factory did not return an Exponential instance."
     assert calc.get_result() == 16, "Incorrect exponentiation result."
 
+def test_calculation_factory_modulus():
+    """
+    Test the Calculation.create factory method for modulus.
+    """
+    from app.models.calculation import Modulus
+    inputs = [10, 3]  # 10 % 3 = 1
+    calc = Calculation.create(
+        calculation_type='modulus',
+        user_id=dummy_user_id(),
+        inputs=inputs,
+    )
+    assert isinstance(calc, Modulus), "Factory did not return a Modulus instance."
+    assert calc.get_result() == 1, "Incorrect modulus result."  
+
+
 def test_calculation_factory_invalid_type():
     """
     Test that Calculation.create raises a ValueError for an unsupported calculation type.
     """
     with pytest.raises(ValueError, match="Unsupported calculation type"):
         Calculation.create(
-            calculation_type='modulus',  # unsupported type
+            calculation_type='power',  # unsupported type
             user_id=dummy_user_id(),
             inputs=[10, 3],
         )
@@ -183,6 +200,24 @@ def test_invalid_inputs_for_exponential():
     exponential = Exponential(user_id=dummy_user_id(), inputs=[2])
     with pytest.raises(ValueError, match="Inputs must be a list with at least two numbers."):
         exponential.get_result()
+
+def test_invalid_inputs_for_modulus():
+    """
+    Test that providing fewer than two numbers to Modulus.get_result raises a ValueError.
+    """
+    from app.models.calculation import Modulus
+    modulus = Modulus(user_id=dummy_user_id(), inputs=[10])
+    with pytest.raises(ValueError, match="Inputs must be a list with at least two numbers."):
+        modulus.get_result()
+
+def test_invalid_inputs_type_for_modulus():
+    """
+    Test that providing non-list inputs to Calculation.create raises a ValueError.
+    """
+    modulus = Modulus(user_id=dummy_user_id(), inputs="not-a-list")
+    with pytest.raises(ValueError, match="Inputs must be a list of numbers."):
+        modulus.get_result()
+    
 
 def test_abstract_calculation_get_result():
     """
