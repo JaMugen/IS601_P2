@@ -274,3 +274,46 @@ def test_exponent(a: Number, b: Number, expected: Number) -> None:
     
     # Assert that the result of Exponent(a, b) matches the expected value
     assert result == expected, f"Expected Exponent({a}, {b}) to be {expected}, but got {result}"
+
+@pytest.mark.parametrize(
+    "a, b, expected",
+    [
+        (5, 2, 1),           # Test modulus of two positive integers
+        (5.5, 2, 1.5),       # Test modulus of a positive float and a positive integer
+        (5, -2, -1),          # Test modulus of a positive integer and a negative integer
+        (-5, 2, 1),         # Test modulus of a negative integer and a positive integer
+    ],  
+    ids=[
+        "modulus_two_positive_integers",
+        "modulus_positive_float_and_positive_integer",
+        "modulus_positive_integer_and_negative_integer",
+        "modulus_negative_integer_and_positive_integer",
+    ]
+)
+def test_modulus(a: Number, b: Number, expected: Number) -> None:
+    """
+    Test the 'modulus' function with various combinations of integers and floats.
+
+    This parameterized test verifies that the 'modulus' function correctly calculates the
+    remainder of the division of the first number by the second, handling both positive and negative values,
+    as well as integers and floats. Parameterization allows for efficient and comprehensive testing across multiple cases.
+
+    Parameters:
+    - a (Number): The dividend.
+    - b (Number): The divisor.
+    - expected (Number): The expected result of the modulus operation.
+
+    Steps:
+    1. Call the 'modulus' function with arguments 'a' and 'b'.
+    2. Assert that the result is equal to 'expected'.
+
+    Example:
+    >>> test_modulus(5, 2, 1)
+    >>> test_modulus(5.5, 2, 1.5)
+    """
+    from app.operations import modulus
+    # Call the 'modulus' function with the provided arguments
+    result = modulus(a, b)
+    
+    # Assert that the result of modulus(a, b) matches the expected value
+    assert result == expected, f"Expected modulus({a}, {b}) to be {expected}, but got {result}"
