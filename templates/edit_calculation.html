@@ -297,8 +297,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       case 'exponent':
         result = inputs.reduce((a, b) => Math.pow(a, b));
         break;
+      case 'modulus':
+        // Avoid modulus by zero
+        if (inputs.some((value, index) => index > 0 && value === 0)) {
+          return 'Cannot modulus by zero';
+        }
+        result = inputs.reduce((a, b, i) => i === 0 ? a : a % b, inputs[0]);
+        break;
       default:
         return 'Unknown operation';
+
     }
     
     // Format the result nicely
@@ -335,6 +343,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         break;
       case 'exponent':
         operator = '^';
+        break;
+      case 'modulus':
+        operator = '%';
         break;
       default:
         operator = '?';
