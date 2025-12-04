@@ -294,6 +294,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         result = inputs.reduce((a, b, i) => i === 0 ? a : a / b, inputs[0]);
         break;
+      case 'exponent':
+        result = inputs.reduce((a, b) => Math.pow(a, b));
+        break;
       default:
         return 'Unknown operation';
     }
@@ -329,6 +332,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         break;
       case 'division':
         operator = '÷';
+        break;
+      case 'exponent':
+        operator = '^';
         break;
       default:
         operator = '?';
