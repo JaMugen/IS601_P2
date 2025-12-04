@@ -382,7 +382,51 @@ def test_division_by_zero_error(authenticated_user):
     error_data = response.json()
     assert "detail" in error_data
 
+# ======================================================================================
+# Exponential Tests
+# ======================================================================================
+@pytest.mark.e2e
+def test_exponent_two_numbers(authenticated_user):
+    """Test exponentiation of two numbers via API."""
+    response = create_calculation_api(
+        authenticated_user["base_url"],
+        authenticated_user["token"],
+        "exponent",
+        [2, 3]
+    )
+    
+    assert response.status_code == 201
+    data = response.json()
+    assert data["type"] == "exponent"
+    assert data["result"] == 8.0 or data["result"] == 8
 
+@pytest.mark.e2e
+def test_exponent_multiple_numbers(authenticated_user):
+    """Test exponentiation of multiple numbers via API."""
+    response = create_calculation_api(
+        authenticated_user["base_url"],
+        authenticated_user["token"],
+        "exponent",
+        [2, 3, 2]  # (2^3)^2 = 64
+    )
+    
+    assert response.status_code == 201
+    data = response.json()
+    assert data["result"] == 64.0 or data["result"] == 64
+
+@pytest.mark.e2e
+def test_exponent_with_zero_exponent(authenticated_user):
+    """Test exponentiation with zero exponent via API."""
+    response = create_calculation_api(
+        authenticated_user["base_url"],
+        authenticated_user["token"],
+        "exponent",
+        [5, 0]
+    )
+    
+    assert response.status_code == 201
+    data = response.json()
+    assert data["result"] == 1.0 or data["result"] == 1
 # ======================================================================================
 # Multiple Operations Test
 # ======================================================================================
