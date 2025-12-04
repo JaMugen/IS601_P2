@@ -381,7 +381,7 @@ class Exponential(Calculation):
         """
         if not isinstance(self.inputs, list):
             raise ValueError("Inputs must be a list of numbers.")
-        if len(self.inputs) != 2:
+        if len(self.inputs) < 2:
             raise ValueError("Inputs must be a list with at least two numbers.")
         result = self.inputs[0]
         for value in self.inputs[1:]:
