@@ -15,6 +15,7 @@ basic mathematical operations: addition, subtraction, multiplication, and divisi
 """
 
 from datetime import datetime
+from unittest import result
 import uuid
 from typing import List
 from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Float
@@ -178,7 +179,8 @@ class AbstractCalculation:
             'subtraction': Subtraction,
             'multiplication': Multiplication,
             'division': Division,
-            'exponent': Exponential
+            'exponent': Exponential,
+            'modulus': Modulus
         }
         calculation_class = calculation_classes.get(calculation_type.lower())
         if not calculation_class:
@@ -387,3 +389,38 @@ class Exponential(Calculation):
         for value in self.inputs[1:]:
             result **= value
         return result
+    
+class Modulus(Calculation):
+    """
+    Modulus calculation subclass.
+    
+    Implements modulus operation of two numbers.
+    Examples:
+        [10, 3] -> 10 % 3 = 1
+        [5.5, 2] -> 5.5 % 2 = 1.5
+    """
+    __mapper_args__ = {"polymorphic_identity": "modulus"}
+
+    def get_result(self) -> float:
+        """
+        Calculate the modulus of the first value by the second value.
+        
+        Expects exactly two inputs: [dividend, divisor].
+        
+        Returns:
+            float: The result of the modulus operation
+            
+        Raises:
+            ValueError: If inputs are not a list, if not exactly two numbers provided,
+                        or if attempting to modulus by zero
+        """
+        if not isinstance(self.inputs, list):
+            raise ValueError("Inputs must be a list of numbers.")
+        if len(self.inputs) < 2:
+            raise ValueError("Inputs must be a list with at least two numbers.")
+        result = self.inputs[0]
+        for value in self.inputs[1:]:
+            if value == 0:
+                raise ValueError("Cannot modulus by zero.")
+            result %= value
+        return result   
