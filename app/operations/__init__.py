@@ -139,3 +139,36 @@ def exponent(a: Number, b: Number) -> Number:
     # Perform exponentiation of a to the power of b
     result = a ** b
     return result
+
+def modulus(a: Number, b: Number) -> Number:
+    """
+    Calculate the modulus of the first number by the second number and return the result.
+
+    Parameters:
+    - a (int or float): The dividend.
+    - b (int or float): The divisor.
+
+    Returns:
+    - int or float: The remainder of a divided by b.
+
+    Raises:
+    - ValueError: If b is zero, as modulus by zero is undefined.
+
+    Example:
+    >>> modulus(5, 2)
+    1
+    >>> modulus(5.5, 2)
+    1.5
+    >>> modulus(5, 0)
+    Traceback (most recent call last):
+        ...
+    ValueError: Cannot perform modulus by zero!
+    """
+    # Check if the divisor is zero to prevent modulus by zero
+    if b == 0:
+        # Raise a ValueError with a descriptive message
+        raise ValueError("Cannot perform modulus by zero!")
+    
+    # Perform modulus of a by b and return the result
+    result = a % b
+    return result
